@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_package = "com.github.alvin_nt";
+
+package simplechat;
+
+service ChatService {
+  rpc SendMessage (Message) returns (MessageResponse) {}
+  rpc GetChannelMessages (Channel) returns (stream UserMessage) {}
+}
+
+message Channel {
+  string name = 1;
+}
+
+message Message {
+  string action = 1;
+  string content = 2;
+  string channel = 3;
+}
+
+message MessageResponse {
+  uint32 status = 1;
+  string message = 2;
+}
+
+message UserMessage {
+  string timestamp = 1;
+  string nickname = 2;
+  string message = 3;
+}
