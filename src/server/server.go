@@ -1,3 +1,0 @@
-package simplechat
-
-import pb ""
