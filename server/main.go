@@ -5,6 +5,7 @@ import pb "github.com/alvin-nt/grpc-simple-chat/proto"
 import (
 	"errors"
 	"fmt"
+	"github.com/alvin-nt/grpc-simple-chat/util"
 	context "golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
@@ -159,7 +160,7 @@ func (cs *chatServer) Authorize(ctx context.Context, req *pb.RequestAuthorize) (
 
 	// assign the required values
 	if len(req.Name) == 0 {
-		req.Name = RandString(16)
+		req.Name = util.RandString(16)
 	}
 	sid := cs.generateSessionID()
 
@@ -590,6 +591,7 @@ func main() {
 	// start the server
 	server := grpc.NewServer()
 	pb.RegisterSimpleChatServer(server, cs)
+	log.Println("Server running at ", lis.Addr().String())
 	if err := server.Serve(lis); err != nil {
 		log.Fatalln("Serve:", err)
 	}
