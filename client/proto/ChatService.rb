@@ -61,6 +61,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :timestamp, :string, 1
     optional :name, :string, 2
     optional :message, :string, 3
+    optional :channel, :string, 4
   end
 end
 

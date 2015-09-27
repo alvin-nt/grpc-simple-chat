@@ -78,4 +78,5 @@ message EventLog {
   string timestamp = 1;
   string name = 2;
   string message = 3;
+  string channel = 4;
 }

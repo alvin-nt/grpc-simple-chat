@@ -469,6 +469,7 @@ type EventLog struct {
 	Timestamp string `protobuf:"bytes,1,opt,name=timestamp" json:"timestamp,omitempty"`
 	Name      string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
 	Message   string `protobuf:"bytes,3,opt,name=message" json:"message,omitempty"`
+	Channel   string `protobuf:"bytes,4,opt,name=channel" json:"channel,omitempty"`
 }
 
 func (m *EventLog) Reset()         { *m = EventLog{} }
