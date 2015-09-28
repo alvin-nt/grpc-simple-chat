@@ -1,0 +1,10 @@
+-x
+c++
+--std=c++0x
+-c
+-I
+/home/alvin/grpc/grpc-java/compiler/src/java_plugin/headers
+/home/alvin/grpc/grpc-java/compiler/src/java_plugin/cpp/java_generator.h
+-o
+/home/alvin/grpc/grpc-java/compiler/build/objs/java_pluginExecutable/java_pluginCpp/3b06x8tgy7j9hd3pnpqftywwn/java_generator.o
+-m64
