@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: grpc-compiler
-Implementation-Version: 0.10.0-SNAPSHOT
-Built-By: alvin
-Built-JDK: 1.7.0_79
-Source-Compatibility: 1.6
-Target-Compatibility: 1.6
-
