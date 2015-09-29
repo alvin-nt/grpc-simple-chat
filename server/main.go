@@ -465,7 +465,10 @@ func (cs *chatServer) JoinChannel(sid uint32, cmd *pb.CommandJoinChannel) error 
 				for _, memberSid := range ch.members {
 					cs.buf[memberSid] <- &pb.Event{
 						Event: &pb.Event_Join{
-							Join: &pb.EventJoin{Name: cs.name[sid]},
+							Join: &pb.EventJoin{
+								Name: cs.name[sid],
+								Channel: ch.name,
+							},
 						},
 					}
 				}
@@ -517,7 +520,14 @@ func (cs *chatServer) LeaveChannel(sid uint32, cmd *pb.CommandLeaveChannel) erro
 			if ch.connected > 0 {
 				removeCh = false
 				for _, memberSid := range ch.members {
-					cs.buf[memberSid] <- &pb.Event{Event: &pb.Event_Leave{Leave: &pb.EventLeave{Name: cs.name[sid]}}}
+					cs.buf[memberSid] <- &pb.Event{
+						Event: &pb.Event_Leave{
+							Leave: &pb.EventLeave{
+								Name: cs.name[sid],
+								Channel: ch.name,
+							},
+						},
+					}
 				}
 			} else {
 				removeCh = true

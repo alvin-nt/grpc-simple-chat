@@ -450,7 +450,8 @@ func (m *EventNone) String() string { return proto1.CompactTextString(m) }
 func (*EventNone) ProtoMessage()    {}
 
 type EventJoin struct {
-	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Name    string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Channel string `protobuf:"bytes,2,opt,name=channel" json:"channel,omitempty"`
 }
 
 func (m *EventJoin) Reset()         { *m = EventJoin{} }
@@ -458,7 +459,8 @@ func (m *EventJoin) String() string { return proto1.CompactTextString(m) }
 func (*EventJoin) ProtoMessage()    {}
 
 type EventLeave struct {
-	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Name    string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Channel string `protobuf:"bytes,2,opt,name=channel" json:"channel,omitempty"`
 }
 
 func (m *EventLeave) Reset()         { *m = EventLeave{} }

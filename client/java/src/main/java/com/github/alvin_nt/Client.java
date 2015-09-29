@@ -77,7 +77,7 @@ public class Client {
     }
 
     public void sendCommand(String command) {
-        
+
     }
 
     public static void main(String args[]) {

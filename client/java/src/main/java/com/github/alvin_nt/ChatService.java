@@ -6759,6 +6759,16 @@ public final class ChatService {
      */
     com.google.protobuf.ByteString
         getNameBytes();
+
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    java.lang.String getChannel();
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getChannelBytes();
   }
   /**
    * Protobuf type {@code proto.EventJoin}
@@ -6773,6 +6783,7 @@ public final class ChatService {
     }
     private EventJoin() {
       name_ = "";
+      channel_ = "";
     }
 
     @java.lang.Override
@@ -6803,6 +6814,12 @@ public final class ChatService {
               String s = input.readStringRequireUtf8();
 
               name_ = s;
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              channel_ = s;
               break;
             }
           }
@@ -6863,6 +6880,40 @@ public final class ChatService {
       }
     }
 
+    public static final int CHANNEL_FIELD_NUMBER = 2;
+    private volatile java.lang.Object channel_;
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    public java.lang.String getChannel() {
+      java.lang.Object ref = channel_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        channel_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getChannelBytes() {
+      java.lang.Object ref = channel_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        channel_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -6878,6 +6929,9 @@ public final class ChatService {
       if (!getNameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, name_);
       }
+      if (!getChannelBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, channel_);
+      }
     }
 
     public int getSerializedSize() {
@@ -6887,6 +6941,9 @@ public final class ChatService {
       size = 0;
       if (!getNameBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessage.computeStringSize(1, name_);
+      }
+      if (!getChannelBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, channel_);
       }
       memoizedSize = size;
       return size;
@@ -7001,6 +7058,8 @@ public final class ChatService {
         super.clear();
         name_ = "";
 
+        channel_ = "";
+
         return this;
       }
 
@@ -7024,6 +7083,7 @@ public final class ChatService {
       public com.github.alvin_nt.ChatService.EventJoin buildPartial() {
         com.github.alvin_nt.ChatService.EventJoin result = new com.github.alvin_nt.ChatService.EventJoin(this);
         result.name_ = name_;
+        result.channel_ = channel_;
         onBuilt();
         return result;
       }
@@ -7041,6 +7101,10 @@ public final class ChatService {
         if (other == com.github.alvin_nt.ChatService.EventJoin.getDefaultInstance()) return this;
         if (!other.getName().isEmpty()) {
           name_ = other.name_;
+          onChanged();
+        }
+        if (!other.getChannel().isEmpty()) {
+          channel_ = other.channel_;
           onChanged();
         }
         onChanged();
@@ -7137,6 +7201,75 @@ public final class ChatService {
         onChanged();
         return this;
       }
+
+      private java.lang.Object channel_ = "";
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public java.lang.String getChannel() {
+        java.lang.Object ref = channel_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          channel_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getChannelBytes() {
+        java.lang.Object ref = channel_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          channel_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public Builder setChannel(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        channel_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public Builder clearChannel() {
+        
+        channel_ = getDefaultInstance().getChannel();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public Builder setChannelBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        channel_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -7208,6 +7341,16 @@ public final class ChatService {
      */
     com.google.protobuf.ByteString
         getNameBytes();
+
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    java.lang.String getChannel();
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getChannelBytes();
   }
   /**
    * Protobuf type {@code proto.EventLeave}
@@ -7222,6 +7365,7 @@ public final class ChatService {
     }
     private EventLeave() {
       name_ = "";
+      channel_ = "";
     }
 
     @java.lang.Override
@@ -7252,6 +7396,12 @@ public final class ChatService {
               String s = input.readStringRequireUtf8();
 
               name_ = s;
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              channel_ = s;
               break;
             }
           }
@@ -7312,6 +7462,40 @@ public final class ChatService {
       }
     }
 
+    public static final int CHANNEL_FIELD_NUMBER = 2;
+    private volatile java.lang.Object channel_;
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    public java.lang.String getChannel() {
+      java.lang.Object ref = channel_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        channel_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string channel = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getChannelBytes() {
+      java.lang.Object ref = channel_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        channel_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -7327,6 +7511,9 @@ public final class ChatService {
       if (!getNameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, name_);
       }
+      if (!getChannelBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, channel_);
+      }
     }
 
     public int getSerializedSize() {
@@ -7336,6 +7523,9 @@ public final class ChatService {
       size = 0;
       if (!getNameBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessage.computeStringSize(1, name_);
+      }
+      if (!getChannelBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, channel_);
       }
       memoizedSize = size;
       return size;
@@ -7450,6 +7640,8 @@ public final class ChatService {
         super.clear();
         name_ = "";
 
+        channel_ = "";
+
         return this;
       }
 
@@ -7473,6 +7665,7 @@ public final class ChatService {
       public com.github.alvin_nt.ChatService.EventLeave buildPartial() {
         com.github.alvin_nt.ChatService.EventLeave result = new com.github.alvin_nt.ChatService.EventLeave(this);
         result.name_ = name_;
+        result.channel_ = channel_;
         onBuilt();
         return result;
       }
@@ -7490,6 +7683,10 @@ public final class ChatService {
         if (other == com.github.alvin_nt.ChatService.EventLeave.getDefaultInstance()) return this;
         if (!other.getName().isEmpty()) {
           name_ = other.name_;
+          onChanged();
+        }
+        if (!other.getChannel().isEmpty()) {
+          channel_ = other.channel_;
           onChanged();
         }
         onChanged();
@@ -7583,6 +7780,75 @@ public final class ChatService {
   checkByteStringIsUtf8(value);
         
         name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object channel_ = "";
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public java.lang.String getChannel() {
+        java.lang.Object ref = channel_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          channel_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getChannelBytes() {
+        java.lang.Object ref = channel_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          channel_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public Builder setChannel(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        channel_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public Builder clearChannel() {
+        
+        channel_ = getDefaultInstance().getChannel();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string channel = 2;</code>
+       */
+      public Builder setChannelBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        channel_ = value;
         onChanged();
         return this;
       }
@@ -8594,16 +8860,17 @@ public final class ChatService {
       " \001(\0132\020.proto.EventNoneH\000\022 \n\004join\030\002 \001(\0132\020" +
       ".proto.EventJoinH\000\022\"\n\005leave\030\003 \001(\0132\021.prot" +
       "o.EventLeaveH\000\022\036\n\003log\030\004 \001(\0132\017.proto.Even" +
-      "tLogH\000B\007\n\005event\"\013\n\tEventNone\"\031\n\tEventJoi" +
-      "n\022\014\n\004name\030\001 \001(\t\"\032\n\nEventLeave\022\014\n\004name\030\001 ",
-      "\001(\t\"M\n\010EventLog\022\021\n\ttimestamp\030\001 \001(\t\022\014\n\004na" +
-      "me\030\002 \001(\t\022\017\n\007message\030\003 \001(\t\022\017\n\007channel\030\004 \001" +
-      "(\t2\260\001\n\nSimpleChat\022@\n\tAuthorize\022\027.proto.R" +
-      "equestAuthorize\032\030.proto.ResponseAuthoriz" +
-      "e\"\000\0222\n\007Connect\022\025.proto.RequestConnect\032\014." +
-      "proto.Event\"\0000\001\022,\n\013SendCommand\022\016.proto.C" +
-      "ommand\032\013.proto.None\"\000B\025\n\023com.github.alvi" +
-      "n_ntb\006proto3"
+      "tLogH\000B\007\n\005event\"\013\n\tEventNone\"*\n\tEventJoi" +
+      "n\022\014\n\004name\030\001 \001(\t\022\017\n\007channel\030\002 \001(\t\"+\n\nEven",
+      "tLeave\022\014\n\004name\030\001 \001(\t\022\017\n\007channel\030\002 \001(\t\"M\n" +
+      "\010EventLog\022\021\n\ttimestamp\030\001 \001(\t\022\014\n\004name\030\002 \001" +
+      "(\t\022\017\n\007message\030\003 \001(\t\022\017\n\007channel\030\004 \001(\t2\260\001\n" +
+      "\nSimpleChat\022@\n\tAuthorize\022\027.proto.Request" +
+      "Authorize\032\030.proto.ResponseAuthorize\"\000\0222\n" +
+      "\007Connect\022\025.proto.RequestConnect\032\014.proto." +
+      "Event\"\0000\001\022,\n\013SendCommand\022\016.proto.Command" +
+      "\032\013.proto.None\"\000B\025\n\023com.github.alvin_ntb\006" +
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -8694,13 +8961,13 @@ public final class ChatService {
     internal_static_proto_EventJoin_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_proto_EventJoin_descriptor,
-        new java.lang.String[] { "Name", });
+        new java.lang.String[] { "Name", "Channel", });
     internal_static_proto_EventLeave_descriptor =
       getDescriptor().getMessageTypes().get(13);
     internal_static_proto_EventLeave_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_proto_EventLeave_descriptor,
-        new java.lang.String[] { "Name", });
+        new java.lang.String[] { "Name", "Channel", });
     internal_static_proto_EventLog_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_proto_EventLog_fieldAccessorTable = new
