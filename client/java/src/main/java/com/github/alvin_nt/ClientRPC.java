@@ -5,7 +5,8 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.awt.*;
-import java.util.Scanner;
+import java.awt.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 public class ClientRPC implements Runnable{
 
     private static final Logger logger = Logger.getLogger(ClientRPC.class.getName());
-
+    private java.util.List<String> JoinedChannel;
     private final ManagedChannel channel;
 
     private SimpleChatGrpc.SimpleChatStub streamStub = null;
@@ -33,6 +34,7 @@ public class ClientRPC implements Runnable{
                 .build();
         streamStub = SimpleChatGrpc.newStub(channel);
         blockingStub = SimpleChatGrpc.newBlockingStub(channel);
+        JoinedChannel = new ArrayList<String>();
     }
 
     public void authorize(String name) {
@@ -64,14 +66,18 @@ public class ClientRPC implements Runnable{
                     case JOIN:
                         ChatService.EventJoin evjoin = event.getJoin();
                         System.out.println(evjoin.getName() + " has been connected");
+                        JoinedChannel.add(evjoin.getChannel());
                         break;
                     case LEAVE:
                         ChatService.EventLeave evleave = event.getLeave();
                         System.out.println(evleave.getName() + "has succesful leave channel");
+                        JoinedChannel.remove(evleave.getChannel());
                         break;
                     case LOG:
                         ChatService.EventLog eventLog = event.getLog();
-                        System.out.println("["+eventLog.getChannel()+"]("+eventLog.getName()+")"+eventLog.getMessage());
+                        if(JoinedChannel.contains(eventLog.getChannel())){
+                            System.out.println("["+eventLog.getChannel()+"]("+eventLog.getName()+")"+eventLog.getMessage());
+                        }
                         break;
                     default:
                         System.err.println("Unknown event");
@@ -88,17 +94,60 @@ public class ClientRPC implements Runnable{
         });
     }
 
-    public void sendCommandSay(String command) {
+    public void Say(String contains,String channelName) {
         ChatService.Command.Builder builder = ChatService.Command.newBuilder()
                 .setSessionId(this.session_id);
         ChatService.CommandSay cmdSay = ChatService.CommandSay.newBuilder()
-                .setMessage("")
-                .setChannelName("")
+                .setMessage(contains)
+                .setChannelName(channelName)
                 .build();
         builder.setSay(cmdSay);
         ChatService.Command cmd = builder.build();
         System.out.println(cmd.toString());
 
+        ChatService.None reply = blockingStub.sendCommand(cmd);
+    }
+
+    public void setNick(String nick){
+        ChatService.Command.Builder builder = ChatService.Command.newBuilder()
+                .setSessionId(this.session_id);
+        ChatService.CommandChangeNick cmdChangeNick = ChatService.CommandChangeNick.newBuilder()
+                .setName(nick)
+                .build();
+        builder.setNick(cmdChangeNick);
+        ChatService.Command cmd = builder.build();
+        ChatService.None reply = blockingStub.sendCommand(cmd);
+    }
+
+    public void JoinChannel(String wanttojoinchannel){
+        ChatService.Command.Builder builder = ChatService.Command.newBuilder()
+                .setSessionId(this.session_id);
+        ChatService.CommandJoinChannel cmdJoinChannel = ChatService.CommandJoinChannel.newBuilder()
+                .setName(nickname)
+                .build();
+        builder.setJoin(cmdJoinChannel);
+        ChatService.Command cmd = builder.build();
+        ChatService.None reply = blockingStub.sendCommand(cmd);
+    }
+
+    public void LeaveChannel(String wanttoleavechannel){
+        ChatService.Command.Builder builder = ChatService.Command.newBuilder()
+                .setSessionId(this.session_id);
+        ChatService.CommandLeaveChannel cmdLeaveChannel = ChatService.CommandLeaveChannel.newBuilder()
+                .setName(nickname)
+                .build();
+        builder.setLeave(cmdLeaveChannel);
+        ChatService.Command cmd = builder.build();
+        ChatService.None reply = blockingStub.sendCommand(cmd);
+    }
+
+    public void Exit(){
+        ChatService.Command.Builder builder = ChatService.Command.newBuilder()
+                .setSessionId(this.session_id);
+        ChatService.CommandExit cmdExit = ChatService.CommandExit.newBuilder()
+                .build();
+        builder.setExit(cmdExit);
+        ChatService.Command cmd = builder.build();
         ChatService.None reply = blockingStub.sendCommand(cmd);
     }
 
@@ -111,25 +160,28 @@ public class ClientRPC implements Runnable{
         String firstWord,commandcontains = null;
         firstWord = userinput.substring(0, userinput.indexOf(" "));
         commandcontains = userinput.substring(userinput.indexOf(" ") + 1, userinput.length());
-        switch (firstWord) {
-            case "/NICK":
-                clientFound.setNick(MessageContains);
-                break;
-            case "/JOIN":
-                if (!AllChannel.contains(MessageContains)) {
-                    AllChannel.add(MessageContains);
+        if (firstWord.equals("/NICK")) {
+            this.setNick(commandcontains);
+
+        } else if (firstWord.equals("/JOIN")) {
+            this.JoinChannel(commandcontains);
+
+        } else if (firstWord.equals("/LEAVE")) {
+            this.LeaveChannel(commandcontains);
+
+        } else if (firstWord.equals("/EXIT")) {
+            this.Exit();
+        }else{
+            if(userinput.charAt(0) == '@' && userinput.contains(" ")){
+                String sendToChannel = userinput.substring(1,userinput.indexOf(" "));
+                this.Say(commandcontains,sendToChannel);
+            }
+            else{
+                for(String sendToChannel : JoinedChannel){
+                    this.Say(commandcontains,sendToChannel);
                 }
-                if (!clientFound.getActiveChannel().contains(MessageContains)) {
-                    clientFound.addChannel(MessageContains);
-                }
-                break;
-            case "/LEAVE":
-                if (clientFound.getActiveChannel().contains(MessageContains)) {
-                    clientFound.removeChannel(MessageContains);
-                }
-                break;
-            case "/EXIT":
-                clients.remove(clientFound);
+            }
+
         }
     }
 
