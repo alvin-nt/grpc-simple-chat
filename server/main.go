@@ -158,14 +158,21 @@ func (cs *chatServer) generateSessionID() uint32 {
 func (cs *chatServer) Authorize(ctx context.Context, req *pb.RequestAuthorize) (*pb.ResponseAuthorize, error) {
 	cs.in++
 
+	var (
+		name string
+		sid uint32
+	)
+
 	// assign the required values
+	sid = cs.generateSessionID()
 	if len(req.Name) == 0 {
-		req.Name = util.RandString(16)
+		name = util.RandString(16)
+	} else {
+		name = req.Name
 	}
-	sid := cs.generateSessionID()
 
 	cs.withWriteLock(func() {
-		cs.name[sid] = req.Name
+		cs.name[sid] = name
 	})
 
 	// if the user is not connected within 5 seconds, then disconnect
@@ -182,10 +189,10 @@ func (cs *chatServer) Authorize(ctx context.Context, req *pb.RequestAuthorize) (
 	// return a response
 	res := pb.ResponseAuthorize{
 		SessionId: sid,
-		Name:      req.Name,
+		Name:      name,
 	}
 
-	log.Printf("User with name %s authorized with id %d", req.Name, sid)
+	log.Printf("User with name %s authorized with id %d", cs.name[sid], sid)
 
 	return &res, nil
 }
@@ -201,12 +208,12 @@ func (cs *chatServer) Connect(req *pb.RequestConnect, stream pb.SimpleChat_Conne
 	)
 
 	// check for the existence of the user
-	cs.withWriteLock(func() {
-		var ok bool
-		name, ok = cs.name[sid]
-		if !ok {
+	cs.withReadLock(func() {
+		if _, ok := cs.name[sid]; !ok {
 			err = errors.New("Unauthorized")
 			return
+		} else {
+			name = cs.name[sid]
 		}
 
 		// check whether the user has already connected
@@ -219,13 +226,17 @@ func (cs *chatServer) Connect(req *pb.RequestConnect, stream pb.SimpleChat_Conne
 		return err
 	}
 
+	cs.withWriteLock(func() {
+		cs.buf[sid] = buf
+	})
+
 	// log
 	log.Printf("User with name %s connected to server", name)
 
 	// in case of error/disconnect, execute this
 	defer cs.removeEmptyChannels()
-	defer log.Printf("User with name %s disconnected.", name)
 	defer cs.withWriteLock(func() { cs.unsafeExpire(sid) })
+	defer log.Printf("User with name %s disconnected.", cs.name[sid])
 	defer cs.BroadcastDisconnectedMessage(sid)
 
 	// the main loop
@@ -254,23 +265,17 @@ func (cs *chatServer) SendCommand(ctx context.Context, req *pb.Command) (*pb.Non
 
 	var (
 		sid  = req.SessionId
-		name string
 		err  error
 	)
 
 	// check for the existence of the user
 	cs.withReadLock(func() {
-		if val, ok := cs.name[sid]; !ok {
+		if _, ok := cs.name[sid]; !ok {
 			err = errors.New("Not authorized")
-		} else {
-			name = val
 		}
 	})
-	if err != nil {
-		return nil, err
-	}
 
-	// execute the apropriate command
+	// execute the proper command
 	switch cmdType := req.GetCommand().(type) {
 	case *pb.Command_Say:
 		cmd := req.GetSay()
@@ -290,7 +295,6 @@ func (cs *chatServer) SendCommand(ctx context.Context, req *pb.Command) (*pb.Non
 	default:
 		err = fmt.Errorf("Unknown command type: %s", cmdType)
 	}
-
 	if err != nil {
 		return nil, err
 	}
@@ -302,7 +306,7 @@ func (cs *chatServer) Say(sid uint32, req *pb.CommandSay) error {
 	var (
 		channel     = req.ChannelName
 		message     = req.Message
-		name        string
+		name        = cs.name[sid]
 		err         error
 		currentTime = time.Now()
 	)
@@ -369,7 +373,8 @@ func (cs *chatServer) ChangeNick(sid uint32, cmd *pb.CommandChangeNick) error {
 	})
 
 	cs.withWriteLock(func() {
-		cs.name[sid] = newNick
+		delete(cs.name, sid)
+		cs.name[sid] = cmd.Name
 	})
 
 	// broadcast message
@@ -427,7 +432,10 @@ func (cs *chatServer) BroadcastDisconnectedMessage(sid uint32) error {
 						if sid != memberSid {
 							cs.buf[memberSid] <- &pb.Event{
 								Event: &pb.Event_Leave{
-									Leave: &pb.EventLeave{Name: cs.name[sid]},
+									Leave: &pb.EventLeave{
+										Name: cs.name[sid],
+										Channel: ch.name,
+									},
 								},
 							}
 						}
@@ -448,17 +456,18 @@ func (cs *chatServer) JoinChannel(sid uint32, cmd *pb.CommandJoinChannel) error 
 	)
 
 	cs.withReadLock(func() {
-		if ch, chFound := cs.channels[chName]; chFound {
+		if ch, found := cs.channels[chName]; found {
+			chFound = true
 			if ch.hasMember(sid) {
 				err = fmt.Errorf("Already registered at channel %s", chName)
 				return
 			}
 
 			// add the user to the existing channel
-			log.Printf("User %s joined to channel %s", cs.name[sid], chName)
 			ch.withWriteLock(func() {
 				ch.addMember(sid)
 			})
+			log.Printf("User %s joined to channel %s", cs.name[sid], chName)
 
 			// broadcast the join message to the channel
 			ch.withReadLock(func() {
