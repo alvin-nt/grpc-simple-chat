@@ -260,10 +260,10 @@ func (cs *chatServer) SendCommand(ctx context.Context, req *pb.Command) (*pb.Non
 
 	// check for the existence of the user
 	cs.withReadLock(func() {
-		var ok bool
-		name, ok = cs.name[sid]
-		if !ok {
+		if val, ok := cs.name[sid]; !ok {
 			err = errors.New("Not authorized")
+		} else {
+			name = val
 		}
 	})
 	if err != nil {
